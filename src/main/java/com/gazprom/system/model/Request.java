@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,17 +37,19 @@ public class Request {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "request_history", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "history_id"))
-    private Set<History> history;
+    private List<History> history;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "request_user", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users;
+    private List<User> users;
 
 
-    public Request(String status, Timestamp filingDate, Timestamp expiryDate, User user, InformationSystem system) {
+    public Request(String status, Timestamp filingDate, Timestamp expiryDate, List<User> users, List<History> history, InformationSystem system) {
         this.status = status;
         this.filingDate = filingDate;
         this.informationSystem = system;
         this.expiryDate = expiryDate;
+        this.users = users;
+        this.history = history;
     }
 }

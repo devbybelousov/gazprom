@@ -5,9 +5,11 @@ import com.gazprom.system.payload.*;
 import com.gazprom.system.repository.RoleRepository;
 import com.gazprom.system.repository.UserRepository;
 import com.gazprom.system.security.JwtTokenProvider;
+import com.gazprom.system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,6 +35,9 @@ public class LoginController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     JwtTokenProvider tokenProvider;
@@ -64,6 +69,14 @@ public class LoginController {
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
+    }
+
+    @PostMapping("/create/user")
+    public ResponseEntity<?> registerUser(@RequestBody UserRequest signUpRequest) {
+        if(!userService.createUser(signUpRequest))
+            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(new ApiResponse(true, "User registered successfully"));
     }
 
 }

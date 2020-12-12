@@ -21,7 +21,7 @@ public class InformationSystem {
     private Long id;
 
     @Column(name = "title")
-    private String userName;
+    private String title;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")

@@ -26,4 +26,10 @@ public class History {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public History(String reason, User user) {
+        this.reason = reason;
+        this.user = user;
+    }
 }
