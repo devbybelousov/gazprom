@@ -119,12 +119,20 @@ public class UserService {
                         requestFormat.getExpiryDate().getYear() + "-" +
                                 requestFormat.getExpiryDate().getMonth() + "-" +
                                 requestFormat.getExpiryDate().getDay() + " 00:00:00.0"),
-                userRepository.findAllById(requestFormat.getUsersId()),
+                getAllUserById(requestFormat.getUsersId()),
                 historyList,
                 system
         );
         sendEmailAddRequest(request);
         return true;
+    }
+
+    public List<User> getAllUserById(List<Long> ids){
+        List<User> users = new ArrayList<>();
+        for (Long id : ids){
+            users.add(userRepository.findById(id).orElseThrow());
+        }
+        return users;
     }
     
     public UserProfile getUserInfo(Long id){
