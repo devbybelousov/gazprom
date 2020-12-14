@@ -5,7 +5,7 @@ import com.gazprom.system.payload.*;
 import com.gazprom.system.repository.RoleRepository;
 import com.gazprom.system.repository.UserRepository;
 import com.gazprom.system.security.JwtTokenProvider;
-import com.gazprom.system.service.UserService;
+import com.gazprom.system.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class LoginController {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
     @Autowired
     JwtTokenProvider tokenProvider;

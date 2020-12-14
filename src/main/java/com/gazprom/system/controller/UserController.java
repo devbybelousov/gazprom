@@ -2,7 +2,7 @@ package com.gazprom.system.controller;
 
 import com.gazprom.system.payload.ApiResponse;
 import com.gazprom.system.payload.ApplicationRequest;
-import com.gazprom.system.service.UserService;
+import com.gazprom.system.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,38 +12,35 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
-    @GetMapping("/all/systems")
-    public ResponseEntity<?> getAllSystem(){
-        return ResponseEntity.ok(userService.getAllSystem());
-    }
-
-    @GetMapping("/all/user")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllUser(){
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @GetMapping("/user/info")
-    ResponseEntity<?> getUserInfo(@RequestParam Long id){
+    @GetMapping("/info")
+    public ResponseEntity<?> getUserInfo(@RequestParam(name = "userId") Long id) {
         return ResponseEntity.ok(userService.getUserInfo(id));
     }
 
-    @GetMapping("/all/user/request")
-    ResponseEntity<?> getUserAllRequest(@RequestParam Long id){
-        return ResponseEntity.ok(userService.getAllUserRequest(id));
+    @GetMapping("/system/info")
+    public ResponseEntity<?> getSystemInfo(@RequestParam(name = "systemId") Long id){
+        return ResponseEntity.ok(userService.getSystemById(id));
     }
 
-    @GetMapping("/all/active/request")
-    ResponseEntity<?> getAllActiveRequest(@RequestParam Long id){
-        return ResponseEntity.ok(userService.getAllActiveRequest(id));
+    @GetMapping("/system/all")
+    public ResponseEntity<?> getAllSystem(){
+        return ResponseEntity.ok(userService.getAllSystem());
     }
 
-    @PostMapping("/add/request")
-    ResponseEntity<?> addRequest(@RequestBody ApplicationRequest request){
-        if(!userService.addRequest(request))
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(new ApiResponse(true, "Request add successfully"));
+    @GetMapping("/unit/all")
+    public ResponseEntity<?> getAllUnit(){
+        return ResponseEntity.ok(userService.getAllUnit());
+    }
+
+    @GetMapping("/department/all")
+    public ResponseEntity<?> getAllDepartmentByUnit(@RequestParam (name = "unitId") Long id){
+        return ResponseEntity.ok(userService.getAllDepartmentByUnit(id));
     }
 }

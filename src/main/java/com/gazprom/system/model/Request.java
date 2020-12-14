@@ -35,8 +35,8 @@ public class Request {
     @JoinColumn(name = "system_id")
     private InformationSystem informationSystem;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "request_history", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "history_id"))
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "request_id")
     private List<History> history;
 
     @ManyToMany(cascade = CascadeType.MERGE)

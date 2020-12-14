@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Data
@@ -27,8 +28,14 @@ public class History {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "status")
+    private String status;
 
-    public History(String reason, User user) {
+    @Column(name = "date")
+    private Timestamp date;
+
+
+    public History(String reason, User user, String status) {
         this.reason = reason;
         this.user = user;
     }

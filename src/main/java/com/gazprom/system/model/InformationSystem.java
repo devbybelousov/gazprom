@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -37,5 +38,5 @@ public class InformationSystem {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "system_privilege", joinColumns = @JoinColumn(name = "system_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id"))
-    private Set<Privilege> privileges;
+    private List<Privilege> privileges;
 }
