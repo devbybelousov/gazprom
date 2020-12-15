@@ -71,7 +71,7 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
     }
 
-    @GetMapping("/signin")
+    @GetMapping("/login")
     public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
         Authentication authentication;
         try {
