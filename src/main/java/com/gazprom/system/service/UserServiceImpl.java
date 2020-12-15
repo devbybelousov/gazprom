@@ -60,10 +60,16 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Role userRole = roleRepository.findByRole("ROLE_USER")
-                .orElseThrow(() -> new AppException("User Role not found."));
-        Department department = departmentRepository.findById(userRequest.getDepartmentId())
-                .orElseThrow(() -> new AppException(("User Department not found.")));
+        Role userRole = new Role(1L, "ROLE_USER");
+        roleRepository.save(userRole);
+        Unit unit = new Unit(1L, "Отдел 1");
+        unitRepository.save(unit);
+        Department department = new Department (1L, "Подразделение 1", unit);
+        departmentRepository.save(department);
+       /* Role userRole = roleRepository.findByRole("ROLE_USER")
+                .orElseThrow(() -> new AppException("User Role not found."));*/
+        /*Department department = departmentRepository.findById(userRequest.getDepartmentId())
+                .orElseThrow(() -> new AppException(("User Department not found.")));*/
 
 
         User user = new User(userRequest.getUserName(), userRequest.getPassword(),
