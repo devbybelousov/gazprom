@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ApplicationRequest {
     private List<Long> usersId;
-    private Date fillingDate;
-    private Date expiryDate;
+    private List<Long> privilegesId;
     private Long idSystem;
 }

@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService {
     private HistoryRepository historyRepository;
 
     @Autowired
+    private PrivilegeRepository privilegeRepository;
+
+    @Autowired
     private EmailService emailService;
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -120,25 +123,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addRequest(ApplicationRequest requestFormat) {
         InformationSystem system = systemRepository.findById(requestFormat.getIdSystem()).orElseThrow();
-        History history = new History("", system.getOwner(), StatusName.STATUS_SHIPPED.toString());
+        History history = new History("", system.getOwner(), StatusName.STATUS_SHIPPED.toString(), new Timestamp(System.currentTimeMillis()));
         historyRepository.save(history);
         List<History> historyList = new ArrayList<>();
         historyList.add(history);
         Request request = new Request(StatusName.STATUS_SHIPPED.toString(),
-                Timestamp.valueOf(
-                        requestFormat.getFillingDate().getYear() + "-" +
-                                requestFormat.getFillingDate().getMonth() + "-" +
-                                requestFormat.getFillingDate().getDay() + " 00:00:00.0"),
-                Timestamp.valueOf(
-                        requestFormat.getExpiryDate().getYear() + "-" +
-                                requestFormat.getExpiryDate().getMonth() + "-" +
-                                requestFormat.getExpiryDate().getDay() + " 00:00:00.0"),
+                new Timestamp(System.currentTimeMillis()),
+                getAllPrivilegesById(requestFormat.getPrivilegesId()),
                 getAllUserById(requestFormat.getUsersId()),
                 historyList,
                 system
         );
         sendEmailAddRequest(request);
-        return false;
+        return true;
     }
 
     @Override
@@ -190,7 +187,15 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUserById(List<Long> ids){
         List<User> users = new ArrayList<>();
         for (Long id : ids){
-            users.add(userRepository.findById(id).orElseThrow());
+            users.add(userRepository.findById(id).orElseThrow(() -> new AppException("User not found.")));
+        }
+        return users;
+    }
+
+    public List<Privilege> getAllPrivilegesById(List<Long> ids){
+        List<Privilege> users = new ArrayList<>();
+        for (Long id : ids){
+            users.add(privilegeRepository.findById(id).orElseThrow(() -> new AppException("Privileges not found.")));
         }
         return users;
     }
@@ -203,6 +208,7 @@ public class UserServiceImpl implements UserService {
                     request.getStatus(),
                     request.getHistory(),
                     getFormatUsers(request.getUsers()),
+                    request.getPrivileges(),
                     new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),
                     new Date(request.getExpiryDate().getDate(), request.getExpiryDate().getMonth(), request.getExpiryDate().getYear()),
                     request.getInformationSystem().getId()

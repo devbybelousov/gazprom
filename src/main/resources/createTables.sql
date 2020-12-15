@@ -18,7 +18,9 @@ create table history
     id      int auto_increment
         primary key,
     user_id int          not null,
-    reason  varchar(200) null
+    reason  varchar(200) null,
+    date datetime not null,
+    status varchar(25) not null
 );
 
 create table users
@@ -73,8 +75,8 @@ create table request
     user_id     int         not null,
     system_id   int         not null,
     filing_date datetime    not null,
-    expiry_date datetime    not null,
-    status      varchar(10) null
+    expiry_date datetime    null,
+    status      varchar(25) not null
 );
 
 create table request_history
@@ -92,5 +94,11 @@ create table request_user
 create table system_privilege
 (
     system_id    int not null,
-    privilege_id int null
+    privilege_id int not null
+);
+
+create table request_privilege
+(
+    request_id   int not null,
+    privilege_id int not null
 );

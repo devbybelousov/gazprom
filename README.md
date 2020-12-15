@@ -14,6 +14,10 @@
 * выходные данные: userId, userName, email, name, lastName, middleName, department
 * пример: **api/user/info?userId=1**
 
+**Получение информации всех пользователей (GET)**: _api/user/all_
+* входные данные: нет;
+* выходные данные: список(userId, userName, email, name, lastName, middleName, department)
+
 **Получение всех заявок пользователя (GET)**: _api/request/all_
 * входные данные: userId
 * выходные данные: список, где idRequest, status, history(список)[], 
@@ -22,14 +26,14 @@ fillingDate[day, month, year], expiryDate[day, month, year], idSystem
 * пример: **api/user/all/user/request?userId=1**
 
 **Создание новой заявки (POST)**: _api/request/add_
-* входные данные: userId(список), fillingDate[day, month, year], expiryDate[day, month, year], idSystem
+* входные данные: userId(список), privilegesId(список), idSystem
 * выходные данные: ok
 
 **Получение активных заявок конкретного пользователя (GET)**: _api/request/all/active_
 * входные данные: userId
 * выходные данные: список, где idRequest, status, history(список)[], 
 users(cписок)[userId, userName, email, name, lastName, middleName, department],
-fillingDate[day, month, year], expiryDate[day, month, year], idSystem
+fillingDate[day, month, year], expiryDate[day, month, year], privileges[id, title],  idSystem
 * пример: **api/user/active/request?userId=1**
 
 **Получить все отделы (GET)**: _api/user/unit/all_

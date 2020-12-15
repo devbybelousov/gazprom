@@ -43,13 +43,18 @@ public class Request {
     @JoinTable(name = "request_user", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "request_privilege", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id"))
+    private List<Privilege> privileges;
 
-    public Request(String status, Timestamp filingDate, Timestamp expiryDate, List<User> users, List<History> history, InformationSystem system) {
+
+    public Request(String status, Timestamp filingDate, List<Privilege> privileges, List<User> users, List<History> history, InformationSystem system) {
         this.status = status;
         this.filingDate = filingDate;
         this.informationSystem = system;
-        this.expiryDate = expiryDate;
+        this.expiryDate = null;
         this.users = users;
         this.history = history;
+        this.privileges = privileges;
     }
 }

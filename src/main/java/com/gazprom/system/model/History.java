@@ -35,8 +35,10 @@ public class History {
     private Timestamp date;
 
 
-    public History(String reason, User user, String status) {
+    public History(String reason, User user, String status, Timestamp date) {
         this.reason = reason;
         this.user = user;
+        this.status = status;
+        this.date = date;
     }
 }
