@@ -71,6 +71,31 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
     }
 
+    @GetMapping("/signin")
+    public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            password
+                    )
+            );
+        } catch (AuthenticationException e) {
+            logger.error("Invalid username/password supplied");
+            throw new BadCredentialsException("Invalid username/password supplied");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found with username: " + username)
+                );
+
+        String jwt = tokenProvider.generateToken(authentication);
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
+    }
+
     @PostMapping("/create/user")
     public ResponseEntity<?> registerUser(@RequestBody UserRequest signUpRequest) {
         if(!userService.createUser(signUpRequest))
