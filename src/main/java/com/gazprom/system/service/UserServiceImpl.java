@@ -116,13 +116,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<?> getAllUserRequest(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(()->new AppException("User not found."));
         return getFormatRequest(user.getRequests());
     }
 
     @Override
     public boolean addRequest(ApplicationRequest requestFormat) {
-        InformationSystem system = systemRepository.findById(requestFormat.getIdSystem()).orElseThrow();
+        InformationSystem system = systemRepository.findById(requestFormat.getIdSystem()).orElseThrow(() -> new AppException("System not found."));
         History history = new History("", system.getOwner(), StatusName.STATUS_SHIPPED.toString(), new Timestamp(System.currentTimeMillis()));
         historyRepository.save(history);
         List<History> historyList = new ArrayList<>();

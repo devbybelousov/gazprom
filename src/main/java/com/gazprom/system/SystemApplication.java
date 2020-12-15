@@ -11,7 +11,6 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 		Jsr310JpaConverters.class
 })
 public class SystemApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SystemApplication.class, args);
 	}
