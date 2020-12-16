@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SystemResponse getSystemById(Long id){
         InformationSystem system = systemRepository.findById(id).orElseThrow(() -> new AppException("System not found."));
-        return new SystemResponse(system.getTitle(), system.getPrivileges(), system.getOwner().getId(), system.getPrimaryAdmin().getId(), system.getBackupAdmin().getId());
+        return new SystemResponse(system.getId(), system.getTitle(), system.getPrivileges(), system.getOwner().getId(), system.getPrimaryAdmin().getId(), system.getBackupAdmin().getId());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
         List<InformationSystem> systems = systemRepository.findAll();
         List<SystemResponse> formatSystems = new ArrayList<>();
         for (InformationSystem system : systems){
-            formatSystems.add(new SystemResponse(system.getTitle(), system.getPrivileges(), system.getOwner().getId(), system.getPrimaryAdmin().getId(), system.getBackupAdmin().getId()));
+            formatSystems.add(new SystemResponse(system.getId(), system.getTitle(), system.getPrivileges(), system.getOwner().getId(), system.getPrimaryAdmin().getId(), system.getBackupAdmin().getId()));
         }
         return formatSystems;
     }

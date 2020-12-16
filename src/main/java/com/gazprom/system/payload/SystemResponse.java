@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class SystemResponse {
+    private Long id;
     private String title;
     private List<Privilege> privileges;
     private Long ownerId;
