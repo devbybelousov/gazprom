@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
     private List<UserProfile> getFormatUsers(List<User> users) {
         List<UserProfile> userProfiles = new ArrayList<>();
         for (User user : users) {
-            if (user != null)
+            if (user.getDepartment() != null)
                 userProfiles.add(new UserProfile(
                         user.getId(),
                         user.getUserName(),
