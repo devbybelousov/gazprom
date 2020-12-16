@@ -48,6 +48,8 @@ public class LoginController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getUserName();
         String password = loginRequest.getPassword();
+        //registerUser(new UserRequest("u1244", "qwerty", "Иван", "Иванов", "Иванович", "ivanov@example.com", 1L));
+        userService.create();
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -71,29 +73,9 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
-        Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            username,
-                            password
-                    )
-            );
-        } catch (AuthenticationException e) {
-            logger.error("Invalid username/password supplied");
-            throw new BadCredentialsException("Invalid username/password supplied");
-        }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User user = userRepository.findByUserName(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with username: " + username)
-                );
-
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
+    @GetMapping("/create")
+    public ResponseEntity<?> create(){
+        return ResponseEntity.ok(userService.create());
     }
 
     @PostMapping("/create/user")

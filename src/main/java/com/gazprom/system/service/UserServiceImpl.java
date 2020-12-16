@@ -60,16 +60,12 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        Role userRole = new Role(1L, "ROLE_USER");
-        roleRepository.save(userRole);
-        Unit unit = new Unit(1L, "Отдел 1");
-        unitRepository.save(unit);
-        Department department = new Department (1L, "Подразделение 1", unit);
-        departmentRepository.save(department);
-       /* Role userRole = roleRepository.findByRole("ROLE_USER")
-                .orElseThrow(() -> new AppException("User Role not found."));*/
-        /*Department department = departmentRepository.findById(userRequest.getDepartmentId())
-                .orElseThrow(() -> new AppException(("User Department not found.")));*/
+        Role userRole = roleRepository.findByRole("ROLE_USER")
+                .orElseThrow(() -> new AppException("User Role not found."));
+        logger.debug(userRole.getRole());
+        Department department = departmentRepository.findById(userRequest.getDepartmentId())
+                .orElseThrow(() -> new AppException(("User Department not found.")));
+        logger.debug(department.getTitle());
 
 
         User user = new User(userRequest.getUserName(), userRequest.getPassword(),
@@ -275,6 +271,15 @@ public class UserServiceImpl implements UserService {
         } catch (IOException | MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean create(){
+        //User user = userRepository.findById(1L).orElseThrow(()->new AppException("User not found."));
+        //logger.debug(user.getUserName());
+        departmentRepository.deleteAll();
+        unitRepository.deleteAll();
+        roleRepository.deleteAll();
+        return true;
     }
 
 }

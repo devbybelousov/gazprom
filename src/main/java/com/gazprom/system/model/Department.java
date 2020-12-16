@@ -25,4 +25,9 @@ public class Department {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_id")
     public Unit unit;
+
+    public Department(String title, Unit unit) {
+        this.unit = unit;
+        this.title = title;
+    }
 }

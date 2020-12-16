@@ -21,4 +21,8 @@ public class Unit {
 
     @Column(name = "title")
     private String title;
+
+    public Unit(String title) {
+        this.title = title;
+    }
 }
