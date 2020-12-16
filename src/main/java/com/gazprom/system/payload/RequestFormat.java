@@ -21,4 +21,5 @@ public class RequestFormat {
     private Date fillingDate;
     private Date expiryDate;
     private Long idSystem;
+    private String system;
 }

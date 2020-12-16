@@ -22,7 +22,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service("EmailService")
 public class EmailServiceImpl implements EmailService {
 
-    private static final String NOREPLY_ADDRESS = "testgazpromakkaunt@yandex.com";
+    private static final String NOREPLY_ADDRESS = "infogazprom.akkaunt@yandex.com";
 
     @Autowired
     private JavaMailSender emailSender;

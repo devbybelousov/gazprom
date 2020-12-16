@@ -24,4 +24,5 @@ public class Privilege {
 
     @Column(name = "description")
     private String description;
+
 }

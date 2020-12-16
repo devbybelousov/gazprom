@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 
@@ -23,6 +25,7 @@ public class Department {
     private String title;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "unit_id")
     public Unit unit;
 

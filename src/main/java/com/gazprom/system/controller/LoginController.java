@@ -48,8 +48,7 @@ public class LoginController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getUserName();
         String password = loginRequest.getPassword();
-        //registerUser(new UserRequest("u1244", "qwerty", "Иван", "Иванов", "Иванович", "ivanov@example.com", 1L));
-        userService.create();
+
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -71,11 +70,6 @@ public class LoginController {
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
-    }
-
-    @GetMapping("/create")
-    public ResponseEntity<?> create(){
-        return ResponseEntity.ok(userService.create());
     }
 
     @PostMapping("/create/user")

@@ -7,14 +7,21 @@ import com.gazprom.system.model.*;
 import com.gazprom.system.payload.Date;
 import com.gazprom.system.repository.*;
 import com.gazprom.system.payload.*;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -213,7 +220,8 @@ public class UserServiceImpl implements UserService {
                     request.getPrivileges(),
                     new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),
                     new Date(request.getExpiryDate().getDate(), request.getExpiryDate().getMonth(), request.getExpiryDate().getYear()),
-                    request.getInformationSystem().getId()
+                    request.getInformationSystem().getId(),
+                    request.getInformationSystem().getTitle()
             ));
         }
         return requests;
@@ -255,14 +263,14 @@ public class UserServiceImpl implements UserService {
         for (User user : request.getUsers()) {
             String userName = user.getName() + " " + user.getLastName() + " " + user.getMiddleName();
             templateModel.replace("user", userName);
-            sendHtmlMessage(user.getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest.html");
+            sendHtmlMessage(user.getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest");
         }
         String userName = request.getInformationSystem().getOwner().getName() + " " +
                 request.getInformationSystem().getOwner().getLastName() + " " +
                 request.getInformationSystem().getOwner().getMiddleName();
         templateModel.replace("user", userName);
         templateModel.replace("owner", true);
-        sendHtmlMessage(request.getInformationSystem().getOwner().getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest.html");
+        sendHtmlMessage(request.getInformationSystem().getOwner().getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest");
     }
 
     private void sendHtmlMessage(String to, String subject, Map<String, Object> template, String pathToHtml) {
@@ -271,15 +279,6 @@ public class UserServiceImpl implements UserService {
         } catch (IOException | MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean create(){
-        //User user = userRepository.findById(1L).orElseThrow(()->new AppException("User not found."));
-        //logger.debug(user.getUserName());
-        departmentRepository.deleteAll();
-        unitRepository.deleteAll();
-        roleRepository.deleteAll();
-        return true;
     }
 
 }
