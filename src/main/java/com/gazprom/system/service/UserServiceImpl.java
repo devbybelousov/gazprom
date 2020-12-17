@@ -143,7 +143,8 @@ public class UserServiceImpl implements UserService {
                 historyList,
                 system
         );
-        sendEmailAddRequest(request);
+        requestRepository.save(request);
+        //sendEmailAddRequest(request);
         return true;
     }
 
