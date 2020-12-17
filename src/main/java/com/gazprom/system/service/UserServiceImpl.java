@@ -286,4 +286,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public boolean setActiveRequest(Long id){
+        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        request.setStatus(StatusName.STATUS_ENABLE.toString());
+        requestRepository.save(request);
+        return true;
+    }
+
 }

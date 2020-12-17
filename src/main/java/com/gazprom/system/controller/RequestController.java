@@ -35,6 +35,12 @@ public class RequestController {
         return ResponseEntity.ok(userService.getHistoryByRequest(id));
     }
 
+    @GetMapping("/status/active")
+    ResponseEntity<?> setActiveStatusRequest(@RequestParam(name = "requestId") Long id){
+        return ResponseEntity.ok(new ApiResponse(userService.setActiveRequest(id),
+                "The status was changed successfully"));
+    }
+
     @GetMapping("/approval/owner")
     ResponseEntity<?> approvalOfApplicationByOwner(@RequestParam(name = "requestId") Long id){
         return ResponseEntity.ok(new ApiResponse(userService.approvalOfApplicationByOwner(id),

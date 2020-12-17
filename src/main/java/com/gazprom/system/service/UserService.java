@@ -23,4 +23,5 @@ public interface UserService {
     boolean approvalOfApplicationByAdmin(Long id);
     boolean rejectionOfRequestByOwner(Long id);
     boolean rejectionOfRequestByAdmin(Long id);
+    boolean setActiveRequest(Long id);
 }
