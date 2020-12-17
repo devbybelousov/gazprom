@@ -212,7 +212,11 @@ public class UserServiceImpl implements UserService {
 
     private List<RequestFormat> getFormatRequest(List<Request> requestList) {
         List<RequestFormat> requests = new ArrayList<>();
+
         for (Request request : requestList) {
+            Date date = null;
+            if (request.getExpiryDate() == null) date = new Date(1, 1, 1);
+            else date =  new Date(request.getExpiryDate().getDate(), request.getExpiryDate().getMonth(), request.getExpiryDate().getYear());
             requests.add(new RequestFormat(
                     request.getId(),
                     request.getStatus(),
@@ -220,7 +224,7 @@ public class UserServiceImpl implements UserService {
                     getFormatUsers(request.getUsers()),
                     request.getPrivileges(),
                     new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),
-                    null,
+                    date,
                     request.getInformationSystem().getId(),
                     request.getInformationSystem().getTitle()
             ));
