@@ -4,6 +4,7 @@ import com.gazprom.system.payload.ApiResponse;
 import com.gazprom.system.payload.ApplicationRequest;
 import com.gazprom.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class RequestController {
 
     @GetMapping("/all")
     ResponseEntity<?> getUserAllRequest(@RequestParam(name = "userId") Long id){
-        return ResponseEntity.ok(userService.getAllUserRequest(id));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.getAllUserRequest(id));
     }
 
     @GetMapping("/all/active")
@@ -26,7 +27,7 @@ public class RequestController {
 
     @PostMapping("/add")
     ResponseEntity<?> addRequest(@RequestBody ApplicationRequest request){
-        return ResponseEntity.ok(new ApiResponse(userService.addRequest(request), "Request add successfully"));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new ApiResponse(userService.addRequest(request), "Request add successfully"));
     }
 
     @GetMapping("/history")

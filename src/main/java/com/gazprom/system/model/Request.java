@@ -52,7 +52,7 @@ public class Request {
         this.status = status;
         this.filingDate = filingDate;
         this.informationSystem = system;
-        this.expiryDate = null;
+        this.expiryDate = new Timestamp(System.currentTimeMillis());
         this.users = users;
         this.history = history;
         this.privileges = privileges;
