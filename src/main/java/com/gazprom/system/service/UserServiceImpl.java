@@ -220,7 +220,6 @@ public class UserServiceImpl implements UserService {
             requests.add(new RequestFormat(
                     request.getId(),
                     request.getStatus(),
-                    request.getHistory(),
                     getFormatUsers(request.getUsers()),
                     request.getPrivileges(),
                     new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),

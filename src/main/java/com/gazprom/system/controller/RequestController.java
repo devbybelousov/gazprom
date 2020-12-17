@@ -2,14 +2,11 @@ package com.gazprom.system.controller;
 
 import com.gazprom.system.payload.ApiResponse;
 import com.gazprom.system.payload.ApplicationRequest;
-import com.gazprom.system.payload.RequestFormat;
 import com.gazprom.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/request")
@@ -19,8 +16,8 @@ public class RequestController {
     UserService userService;
 
     @GetMapping("/all")
-    List<?> getUserAllRequest(@RequestParam(name = "userId") Long id){
-        return userService.getAllUserRequest(id);
+    ResponseEntity<?> getUserAllRequest(@RequestParam(name = "userId") Long id){
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.getAllUserRequest(id));
     }
 
     @GetMapping("/all/active")

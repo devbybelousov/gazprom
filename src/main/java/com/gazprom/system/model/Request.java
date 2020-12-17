@@ -1,5 +1,6 @@
 package com.gazprom.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,14 +36,17 @@ public class Request {
     @JoinColumn(name = "system_id")
     private InformationSystem informationSystem;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "request_id")
     private List<History> history;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "request_user", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "request_privilege", joinColumns = @JoinColumn(name = "request_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id"))
     private List<Privilege> privileges;

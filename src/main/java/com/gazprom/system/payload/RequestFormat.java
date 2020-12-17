@@ -15,7 +15,6 @@ import java.util.List;
 public class RequestFormat {
     private Long idRequest;
     private String status;
-    private List<History> history;
     private List<UserProfile> users;
     private List<Privilege> privileges;
     private Date fillingDate;
