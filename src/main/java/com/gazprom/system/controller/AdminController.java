@@ -61,27 +61,27 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse(userService.deleteSystem(systemId), "System deleted successfully."));
     }
 
-    @GetMapping("/department/add")
+    @GetMapping("/department/delete")
     public ResponseEntity<?> deleteDepartment(@RequestParam Long departmentId){
         return ResponseEntity.ok(new ApiResponse(userService.deleteDepartment(departmentId), "Department deleted successfully."));
     }
 
-    @GetMapping("/privilege/add")
+    @GetMapping("/privilege/delete")
     public ResponseEntity<?> deletePrivilege(@RequestParam Long privilegeId){
         return ResponseEntity.ok(new ApiResponse(userService.deletePrivilege(privilegeId), "Privilege deleted successfully."));
     }
 
-    @GetMapping("/unit/add")
+    @GetMapping("/unit/delete")
     public ResponseEntity<?> deleteUnit(@RequestParam Long unitId){
         return ResponseEntity.ok(new ApiResponse(userService.deleteUnit(unitId), "Unit deleted successfully."));
     }
 
-    @GetMapping("/user/add")
+    @GetMapping("/user/delete")
     public ResponseEntity<?> deleteUser(@RequestParam Long userId){
         return ResponseEntity.ok(new ApiResponse(userService.deleteUser(userId), "User deleted successfully."));
     }
 
-    @GetMapping("/request/add")
+    @GetMapping("/request/delete")
     public ResponseEntity<?> deleteRequest(@RequestParam Long requestId){
         return ResponseEntity.ok(new ApiResponse(userService.deleteRequest(requestId), "Request deleted successfully."));
     }
