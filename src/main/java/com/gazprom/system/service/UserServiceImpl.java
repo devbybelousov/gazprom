@@ -175,23 +175,137 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean approvalOfApplicationByOwner(Long id) {
-        return false;
+    public boolean approvalOfApplicationByOwner(Long id, Long userId) {
+        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        User owner = request.getInformationSystem().getOwner();
+        if (!userId.equals(owner.getId())) return false;
+        History historyOwner = new History("", owner, StatusName.STATUS_ENABLE.toString(), new Timestamp(System.currentTimeMillis()));
+        History historyAdmin = new History("", request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_SHIPPED.toString(), new Timestamp(System.currentTimeMillis()));
+        historyRepository.save(historyOwner);
+        historyRepository.save(historyAdmin);
+        List<History> historyList = request.getHistory();
+        historyList.add(historyOwner);
+        historyList.add(historyAdmin);
+        requestRepository.save(request);
+        return true;
     }
 
     @Override
-    public boolean approvalOfApplicationByAdmin(Long id) {
-        return false;
+    public boolean approvalOfApplicationByAdmin(Long id, Long userId) {
+        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        if (!userId.equals(request.getInformationSystem().getPrimaryAdmin().getId())) return false;
+        History history = new History("", request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_ENABLE.toString(), new Timestamp(System.currentTimeMillis()));
+        historyRepository.save(history);
+        List<History> historyList = request.getHistory();
+        historyList.add(history);
+        request.setStatus(StatusName.STATUS_ENABLE.toString());
+        requestRepository.save(request);
+        return true;
     }
 
     @Override
-    public boolean rejectionOfRequestByOwner(Long id) {
-        return false;
+    public boolean rejectionOfRequestByOwner(Long id, Long userId, String reason) {
+        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        if (!userId.equals(request.getInformationSystem().getOwner().getId())) return false;
+        History history = new History(reason, request.getInformationSystem().getOwner(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
+        historyRepository.save(history);
+        List<History> historyList = request.getHistory();
+        historyList.add(history);
+        request.setStatus(StatusName.STATUS_REFUSED.toString());
+        requestRepository.save(request);
+        return true;
     }
 
     @Override
-    public boolean rejectionOfRequestByAdmin(Long id) {
-        return false;
+    public boolean rejectionOfRequestByAdmin(Long id, Long userId, String reason) {
+        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        if (!userId.equals(request.getInformationSystem().getPrimaryAdmin().getId())) return false;
+        History history = new History(reason, request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
+        historyRepository.save(history);
+        List<History> historyList = request.getHistory();
+        historyList.add(history);
+        request.setStatus(StatusName.STATUS_REFUSED.toString());
+        requestRepository.save(request);
+        return true;
+    }
+
+    @Override
+    public boolean addSystem(SystemRequest systemRequest) {
+        User owner = userRepository.findById(systemRequest.getOwnerId()).orElseThrow(() -> new AppException("User not found."));
+        User primaryAdmin = userRepository.findById(systemRequest.getPrimaryAdminId()).orElseThrow(() -> new AppException("User not found."));
+        User backupAdmin = userRepository.findById(systemRequest.getBackupAdminId()).orElseThrow(() -> new AppException("User not found."));
+        List<Privilege> privileges = new ArrayList<>();
+        for (Long id : systemRequest.getPrivilegesId()){
+            Privilege privilege = privilegeRepository.findById(id).orElseThrow(() -> new AppException("Privilege not found."));
+            privileges.add(privilege);
+        }
+        InformationSystem system = new InformationSystem(systemRequest.getTitle(), owner, primaryAdmin, backupAdmin, privileges);
+        systemRepository.save(system);
+        return true;
+    }
+
+    @Override
+    public boolean addDepartment(String title, Long unitId) {
+        Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new AppException("Unit not found."));
+        Department department = new Department(title, unit);
+        departmentRepository.save(department);
+        return true;
+    }
+
+    @Override
+    public boolean addPrivilege(String title, String desc) {
+        Privilege privilege = new Privilege(title, desc);
+        privilegeRepository.save(privilege);
+        return true;
+    }
+
+    @Override
+    public boolean addUnit(String title) {
+        Unit unit = new Unit(title);
+        unitRepository.save(unit);
+        return true;
+    }
+
+    @Override
+    public boolean deleteUnit(Long id) {
+        Unit unit = unitRepository.findById(id).orElseThrow(() -> new AppException("Unit not found."));
+        unitRepository.delete(unit);
+        return true;
+    }
+
+    @Override
+    public boolean deleteDepartment(Long id) {
+        Department department = departmentRepository.findById(id).orElseThrow(() -> new AppException("Department not found."));
+        departmentRepository.delete(department);
+        return true;
+    }
+
+    @Override
+    public boolean deleteSystem(Long id) {
+        InformationSystem system = systemRepository.findById(id).orElseThrow(() -> new AppException("System not found."));
+        systemRepository.delete(system);
+        return true;
+    }
+
+    @Override
+    public boolean deletePrivilege(Long id) {
+        Privilege privilege = privilegeRepository.findById(id).orElseThrow(() -> new AppException("Privilege not found."));
+        privilegeRepository.delete(privilege);
+        return true;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException("User not found."));
+        userRepository.delete(user);
+        return true;
+    }
+
+    @Override
+    public boolean deleteRequest(Long id) {
+        Request request = requestRepository.findById(id).orElseThrow(() -> new AppException("Request not found."));
+        requestRepository.delete(request);
+    return true;
     }
 
     public List<User> getAllUserById(List<Long> ids){
@@ -284,13 +398,6 @@ public class UserServiceImpl implements UserService {
         } catch (IOException | MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean setActiveRequest(Long id){
-        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
-        request.setStatus(StatusName.STATUS_ENABLE.toString());
-        requestRepository.save(request);
-        return true;
     }
 
 }

@@ -56,7 +56,7 @@ public class Request {
         this.status = status;
         this.filingDate = filingDate;
         this.informationSystem = system;
-        this.expiryDate = new Timestamp(System.currentTimeMillis());
+        this.expiryDate = null;
         this.users = users;
         this.history = history;
         this.privileges = privileges;

@@ -1,9 +1,6 @@
 package com.gazprom.system.service;
 
-import com.gazprom.system.payload.ApplicationRequest;
-import com.gazprom.system.payload.SystemResponse;
-import com.gazprom.system.payload.UserProfile;
-import com.gazprom.system.payload.UserRequest;
+import com.gazprom.system.payload.*;
 
 import java.util.List;
 
@@ -19,9 +16,18 @@ public interface UserService {
     List<?> getHistoryByRequest(Long id);
     List<?> getAllDepartmentByUnit(Long id);
     List<?> getAllUnit();
-    boolean approvalOfApplicationByOwner(Long id);
-    boolean approvalOfApplicationByAdmin(Long id);
-    boolean rejectionOfRequestByOwner(Long id);
-    boolean rejectionOfRequestByAdmin(Long id);
-    boolean setActiveRequest(Long id);
+    boolean approvalOfApplicationByOwner(Long id, Long userId);
+    boolean approvalOfApplicationByAdmin(Long id, Long userId);
+    boolean rejectionOfRequestByOwner(Long id, Long userId, String reason);
+    boolean rejectionOfRequestByAdmin(Long id, Long userId, String reason);
+    boolean addSystem(SystemRequest systemRequest);
+    boolean addDepartment(String title, Long unitId);
+    boolean addPrivilege(String title, String desc);
+    boolean addUnit(String title);
+    boolean deleteUnit(Long id);
+    boolean deleteDepartment(Long id);
+    boolean deleteSystem(Long id);
+    boolean deletePrivilege(Long id);
+    boolean deleteUser(Long id);
+    boolean deleteRequest(Long id);
 }

@@ -72,12 +72,6 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
     }
 
-    @PostMapping("/create/user")
-    public ResponseEntity<?> registerUser(@RequestBody UserRequest signUpRequest) {
-        if(!userService.createUser(signUpRequest))
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(new ApiResponse(true, "User registered successfully"));
-    }
+
 
 }

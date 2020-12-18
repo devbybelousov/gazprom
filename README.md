@@ -5,7 +5,7 @@
 * входные данные: userName, password; 
 * выходные данные: accessToken, tokenType, userId
 
-**Добавление нового пользователя (POST)**: _api/auth/create/user_
+**Добавление нового пользователя (POST)**: _api/admin/create/user_
 * входные данные: userName, password, name, lastName, middleName, departmentId; 
 * выходные данные: ok
 
@@ -53,3 +53,77 @@ fillingDate[day, month, year], expiryDate[day, month, year], privileges[id, titl
 * входные данные:  systemId
 * выходные данные: title, privileges([id, title, description], ownerId, primaryAdminId, backupAdminId
 * пример: **api/user/system/info?systemId=1**
+
+**Проверить логин в системе(GET)**: _api/admin/exists/user_
+* входные данные:  userName
+* выходные данные: ошибка или 200
+* пример: **api/admin/exists/user?userName=Oleg**
+
+**Добавить новую систему(POST)**: _api/admin/system/add_
+* входные данные:  title, ownerId, primaryAdminId, backupAdminId, privilegesId(список)
+* выходные данные: ok
+
+**Добавить новое подразделение(GET)**: _api/admin/department/add_
+* входные данные:  title, unitId
+* выходные данные: ok
+* пример: **api/admin/department/add?title=Название&unitId=1**
+
+**Добавить новую привилегию(GET)**: _api/admin/privilege/add_
+* входные данные:  title, description
+* выходные данные: ok
+* пример: **api/admin/privilege/add?title=Название&description=Описание**
+
+**Добавить новый отдел(GET)**: _api/admin/unit/add_
+* входные данные:  title
+* выходные данные: ok
+* пример: **api/admin/unit/add?title=Название**
+
+**Удалить систему(GET)**: _api/admin/system/delete_
+* входные данные:  systemId
+* выходные данные: ok
+* пример: **api/admin/unit/add?systemId=1**
+
+**Удалить подразделение(GET)**: _api/admin/department/delete_
+* входные данные:  departmentId
+* выходные данные: ok
+* пример: **api/admin/department/add?departmentId=1**
+
+**Удалить привилегию(GET)**: _api/admin/privilege/delete_
+* входные данные:  privilegeId
+* выходные данные: ok
+* пример: **api/admin/privilege/add?privilegeId=1**
+
+**Удалить отдел(GET)**: _api/admin/unit/delete_
+* входные данные:  unitId
+* выходные данные: ok
+* пример: **api/admin/unit/add?unitId=1**
+
+**Удалить пользователя(GET)**: _api/admin/user/delete_
+* входные данные:  userId
+* выходные данные: ok
+* пример: **api/admin/user/add?userId=1**
+
+**Удалить заявку(GET)**: _api/admin/request/delete_
+* входные данные:  requestId
+* выходные данные: ok
+* пример: **api/admin/request/add?requestId=1**
+
+**Принять заявку со стороны владельца(GET)**: _api/request/approval/owner_
+* входные данные:  requestId, userId
+* выходные данные: ok
+* пример: **api/request/approval/owner?requestId=1&userId=1**
+
+**Принять заявку со стороны администратора(GET)**: _api/request/approval/admin_
+* входные данные:  requestId, userId
+* выходные данные: ok
+* пример: **api/request/approval/admin?requestId=1&userId=1**
+
+**Отклонить заявку со стороны владельца(GET)**: _api/request/rejection/owner_
+* входные данные:  requestId, userId, reason
+* выходные данные: ok
+* пример: **api/request/rejection/owner?requestId=1&userId=1&reason=Причина**
+
+**Принять заявку со стороны администратора(GET)**: _api/request/rejection/admin_
+* входные данные:  requestId, userId, reason
+* выходные данные: ok
+* пример: **api/request/rejection/admin?requestId=1&userId=1&reason=Причина**

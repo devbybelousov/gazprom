@@ -1,5 +1,6 @@
 package com.gazprom.system.controller;
 
+import com.gazprom.system.model.Department;
 import com.gazprom.system.payload.ApiResponse;
 import com.gazprom.system.payload.ApplicationRequest;
 import com.gazprom.system.service.UserServiceImpl;

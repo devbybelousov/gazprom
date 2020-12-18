@@ -39,4 +39,12 @@ public class InformationSystem {
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "system_privilege", joinColumns = @JoinColumn(name = "system_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id"))
     private List<Privilege> privileges;
+
+    public InformationSystem(String title, User owner, User primaryAdmin, User backupAdmin, List<Privilege> privileges) {
+        this.title = title;
+        this.owner = owner;
+        this.primaryAdmin = primaryAdmin;
+        this.backupAdmin = backupAdmin;
+        this.privileges = privileges;
+    }
 }
