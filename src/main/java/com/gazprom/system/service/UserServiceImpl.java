@@ -136,8 +136,10 @@ public class UserServiceImpl implements UserService {
                 historyList,
                 system
         );
-        requestRepository.save(request);
-        //sendEmailAddRequest(request);
+        request = requestRepository.save(request);
+        history.setRequest(request);
+        historyRepository.save(history);
+        sendEmailAddRequest(request);
         return true;
     }
 
@@ -387,7 +389,8 @@ public class UserServiceImpl implements UserService {
         for (Privilege role : request.getInformationSystem().getPrivileges()) {
             roles.append(role.getTitle()).append(", ");
         }
-        roles.deleteCharAt(roles.length() - 1);
+
+        roles = new StringBuilder(roles.substring(0, roles.length() - 2));
 
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("user", "");
@@ -397,16 +400,16 @@ public class UserServiceImpl implements UserService {
         templateModel.put("owner", false);
 
         for (User user : request.getUsers()) {
-            String userName = user.getName() + " " + user.getLastName() + " " + user.getMiddleName();
+            String userName = user.getLastName() + " " + user.getName() + " " + user.getMiddleName();
             templateModel.replace("user", userName);
-            sendHtmlMessage(user.getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest");
+            sendHtmlMessage(user.getEmail(), "Заявка на рассмотрении", templateModel, "html/creatingRequest");
         }
-        String userName = request.getInformationSystem().getOwner().getName() + " " +
-                request.getInformationSystem().getOwner().getLastName() + " " +
+        String userName = request.getInformationSystem().getOwner().getLastName() + " " +
+                request.getInformationSystem().getOwner().getName() + " " +
                 request.getInformationSystem().getOwner().getMiddleName();
         templateModel.replace("user", userName);
         templateModel.replace("owner", true);
-        sendHtmlMessage(request.getInformationSystem().getOwner().getEmail(), "Заявка на рассмотрении", templateModel, "creatingRequest");
+        sendHtmlMessage(request.getInformationSystem().getOwner().getEmail(), "Заявка на рассмотрении", templateModel, "html/creatingRequest");
     }
 
     private void sendHtmlMessage(String to, String subject, Map<String, Object> template, String pathToHtml) {

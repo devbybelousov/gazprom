@@ -1,37 +1,37 @@
 package com.gazprom.system.mail;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 @Service("EmailService")
 public class EmailServiceImpl implements EmailService {
 
-    private static final String NOREPLY_ADDRESS = "infogazprom.akkaunt@yandex.com";
+    private final String NOREPLY_ADDRESS = "ryslan12072000@mail.ru";
+    private final String LOGO_IMAGE = "mail/html/images/mail-logo.svg";
+
+    private static final String SVG_MIME = "image/svg";
 
     @Autowired
     private JavaMailSender emailSender;
 
+    @Qualifier("emailTemplateEngine")
     @Autowired
-    private SpringTemplateEngine thymeleafTemplateEngine;
-
-    @Value("classpath:/mail-logo.svg")
-    private Resource resourceFile;
+    private TemplateEngine htmlTemplateEngine;
 
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
@@ -79,7 +79,7 @@ public class EmailServiceImpl implements EmailService {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
 
-        String htmlBody = thymeleafTemplateEngine.process(pathToHtml, thymeleafContext);
+        String htmlBody = this.htmlTemplateEngine.process(pathToHtml, thymeleafContext);
 
         sendHtmlMessage(to, subject, htmlBody);
     }
@@ -92,7 +92,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        helper.addInline("attachment.svg", resourceFile);
+        helper.addInline("logo", new ClassPathResource(LOGO_IMAGE), SVG_MIME);
         emailSender.send(message);
     }
 

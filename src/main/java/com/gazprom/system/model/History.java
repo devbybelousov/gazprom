@@ -34,6 +34,10 @@ public class History {
     @Column(name = "date")
     private Timestamp date;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "request_id")
+    private Request request;
+
 
     public History(String reason, User user, String status, Timestamp date) {
         this.reason = reason;
