@@ -127,3 +127,13 @@ fillingDate[day, month, year], expiryDate[day, month, year], privileges[id, titl
 * входные данные:  requestId, userId, reason
 * выходные данные: ok
 * пример: **api/request/rejection/admin?requestId=1&userId=1&reason=Причина**
+
+**Получить заявки администратора(GET)**: _api/request/all/admin_
+* входные данные: userId
+* выходные данные: ok
+* пример: **api/request/all/admin?&userId=1**
+
+**Получить заявки владельца(GET)**: _api/request/all/owner_
+* входные данные: userId
+* выходные данные: ok
+* пример: **api/request/all/owner?&userId=1**

@@ -21,6 +21,16 @@ public class RequestController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.getAllUserRequest(id));
     }
 
+    @GetMapping("/all/admin")
+    ResponseEntity<?> getAllAdminRequest(@RequestParam("userId") Long id){
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.getAllAdminRequest(id));
+    }
+
+    @GetMapping("/all/owner")
+    ResponseEntity<?> getAllOwnerRequest(@RequestParam("userId") Long id){
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userService.getAllOwnerRequest(id));
+    }
+
     @GetMapping("/all/active")
     ResponseEntity<?> getAllActiveRequest(@RequestParam(name = "userId") Long id){
         return ResponseEntity.ok(userService.getAllRequestByStatusEnable(id));

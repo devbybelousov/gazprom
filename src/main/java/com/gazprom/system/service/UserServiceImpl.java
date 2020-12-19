@@ -7,16 +7,9 @@ import com.gazprom.system.model.*;
 import com.gazprom.system.payload.Date;
 import com.gazprom.system.repository.*;
 import com.gazprom.system.payload.*;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -156,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<?> getHistoryByRequest(Long id) {
-        Request request = requestRepository.getById(id).orElseThrow(()-> new AppException("Request not found."));
+        Request request = requestRepository.findAllById(id).orElseThrow(()-> new AppException("Request not found."));
         List<HistoryResponse> historyResponses = new ArrayList<>();
         for(History history : request.getHistory()){
             historyResponses.add(new HistoryResponse(history.getUser().getId(), history.getReason(), new Date(history.getDate().getDate(), history.getDate().getMonth(), history.getDate().getYear()), history.getStatus()));
@@ -176,7 +169,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean approvalOfApplicationByOwner(Long id, Long userId) {
-        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         User owner = request.getInformationSystem().getOwner();
         if (!userId.equals(owner.getId())) return false;
         History historyOwner = new History("", owner, StatusName.STATUS_ENABLE.toString(), new Timestamp(System.currentTimeMillis()));
@@ -192,7 +185,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean approvalOfApplicationByAdmin(Long id, Long userId) {
-        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         if (!userId.equals(request.getInformationSystem().getPrimaryAdmin().getId())) return false;
         History history = new History("", request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_ENABLE.toString(), new Timestamp(System.currentTimeMillis()));
         historyRepository.save(history);
@@ -205,7 +198,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean rejectionOfRequestByOwner(Long id, Long userId, String reason) {
-        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         if (!userId.equals(request.getInformationSystem().getOwner().getId())) return false;
         History history = new History(reason, request.getInformationSystem().getOwner(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
         historyRepository.save(history);
@@ -218,7 +211,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean rejectionOfRequestByAdmin(Long id, Long userId, String reason) {
-        Request request = requestRepository.getById(id).orElseThrow(() -> new AppException("Request not found."));
+        Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         if (!userId.equals(request.getInformationSystem().getPrimaryAdmin().getId())) return false;
         History history = new History(reason, request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
         historyRepository.save(history);
@@ -306,6 +299,30 @@ public class UserServiceImpl implements UserService {
         Request request = requestRepository.findById(id).orElseThrow(() -> new AppException("Request not found."));
         requestRepository.delete(request);
     return true;
+    }
+
+    @Override
+    public List<?> getAllAdminRequest(Long id) {
+        return getAllRequestAdminOrOwner(systemRepository.findAllByPrimaryAdminId(id), id);
+    }
+
+    @Override
+    public List<?> getAllOwnerRequest(Long id) {
+        return getAllRequestAdminOrOwner(systemRepository.findAllByOwnerId(id), id);
+    }
+
+    private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){
+        List<Request> requestList = new ArrayList<>();
+        for (InformationSystem system : systems){
+            List<Request> requests = requestRepository.findAllByInformationSystemId(system.getId());
+            for (Request request : requests){
+                History history = request.getHistory().get(request.getHistory().size() - 1);
+                if (history.getStatus().equals(StatusName.STATUS_SHIPPED.toString()) && history.getUser().getId().equals(id)){
+                    requestList.add(request);
+                }
+            }
+        }
+        return getFormatRequest(requestList);
     }
 
     public List<User> getAllUserById(List<Long> ids){

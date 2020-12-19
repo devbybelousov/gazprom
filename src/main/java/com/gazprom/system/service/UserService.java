@@ -30,4 +30,6 @@ public interface UserService {
     boolean deletePrivilege(Long id);
     boolean deleteUser(Long id);
     boolean deleteRequest(Long id);
+    List<?> getAllAdminRequest(Long id);
+    List<?> getAllOwnerRequest(Long id);
 }

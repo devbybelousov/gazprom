@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    List<Request> getAllByStatus(String status);
-    Optional<Request> getById(Long id);
+    List<Request> findAllByStatus(String status);
+    Optional<Request> findAllById(Long id);
+    List<Request> findAllByInformationSystemId(Long id);
 }
