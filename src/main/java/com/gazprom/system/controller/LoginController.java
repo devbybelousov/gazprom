@@ -74,7 +74,7 @@ public class LoginController {
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
 
-        if (user.getRoles().isEmpty()){
+        if (user.getRoles().iterator().next() == null){
             Role role = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
             user.setRoles(Collections.singleton(role));
             user = userRepository.save(user);
