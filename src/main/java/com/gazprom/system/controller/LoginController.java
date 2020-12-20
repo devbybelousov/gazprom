@@ -26,6 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -73,11 +75,15 @@ public class LoginController {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
-        
-        Role roleUser = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
-        user.setRoles(Collections.singleton(roleUser));
-        user = userRepository.save(user);
-        logger.error("User Role added!");
+
+        if (!user.getRoles().iterator().hasNext()){
+            Role role = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
+            Set<Role> roles = new HashSet<>();
+            roles.add(role);
+            user.setRoles(roles);
+            user = userRepository.save(user);
+            logger.error("User Role added!");
+        }
 
         Role role = user.getRoles().iterator().next();
         logger.error("role = {}", role.getRole());
