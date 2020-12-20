@@ -14,4 +14,9 @@ public class JwtAuthenticationResponse {
         this.userId = userId;
         this.role = role;
     }
+
+    public JwtAuthenticationResponse(String accessToken, Long userId) {
+        this.accessToken = accessToken;
+        this.userId = userId;
+    }
 }
