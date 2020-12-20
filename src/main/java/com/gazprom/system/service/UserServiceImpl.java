@@ -247,14 +247,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addSystem(SystemRequest systemRequest) {
         User owner = userRepository.findById(systemRequest.getOwnerId()).orElseThrow(() -> new AppException("User not found."));
-        logger.error(String.valueOf(userRepository.existsByUserName(owner.getUserName())));
-        logger.error("owner = {}",owner.getUserName());
         User primaryAdmin = userRepository.findById(systemRequest.getPrimaryAdminId()).orElseThrow(() -> new AppException("User not found."));
-        logger.error("adminP = {}", primaryAdmin.getUserName());
         User backupAdmin = userRepository.findById(systemRequest.getBackupAdminId()).orElseThrow(() -> new AppException("User not found."));
-        logger.error("adminB = {}", backupAdmin.getUserName());
-        logger.error(String.valueOf(userRepository.existsByUserName(backupAdmin.getUserName())));
-        logger.error(systemRequest.getPrivilegesId().toString());
         List<Privilege> privileges = new ArrayList<>();
         for (Long id : systemRequest.getPrivilegesId()){
             Privilege privilege = privilegeRepository.findById(id).orElseThrow(() -> new AppException("Privilege not found."));
@@ -368,6 +362,8 @@ public class UserServiceImpl implements UserService {
             List<Request> requests = requestRepository.findAllByInformationSystemId(system.getId());
             for (Request request : requests){
                 History history = request.getHistory().get(request.getHistory().size() - 1);
+                logger.error(request.getHistory().toString());
+                logger.error(history.getUser().getUserName());
                 if (history.getStatus().equals(StatusName.STATUS_SHIPPED.toString()) && history.getUser().getId().equals(id)){
                     requestList.add(request);
                 }
