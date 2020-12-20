@@ -362,8 +362,6 @@ public class UserServiceImpl implements UserService {
             List<Request> requests = requestRepository.findAllByInformationSystemId(system.getId());
             for (Request request : requests){
                 History history = request.getHistory().get(request.getHistory().size() - 1);
-                logger.error(request.getHistory().toString());
-                logger.error(history.getUser().getUserName());
                 if (history.getStatus().equals(StatusName.STATUS_SHIPPED.toString()) && history.getUser().getId().equals(id)){
                     requestList.add(request);
                 }
