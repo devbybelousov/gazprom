@@ -73,13 +73,11 @@ public class LoginController {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
-
-        if (!user.getRoles().iterator().hasNext()){
-            Role role = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
-            user.setRoles(Collections.singleton(role));
-            user = userRepository.save(user);
-            logger.error("User Role added!");
-        }
+        
+        Role roleUser = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
+        user.setRoles(Collections.singleton(roleUser));
+        user = userRepository.save(user);
+        logger.error("User Role added!");
 
         Role role = user.getRoles().iterator().next();
         logger.error("role = {}", role.getRole());
