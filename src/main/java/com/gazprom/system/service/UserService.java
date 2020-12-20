@@ -32,4 +32,6 @@ public interface UserService {
     boolean deleteRequest(Long id);
     List<?> getAllAdminRequest(Long id);
     List<?> getAllOwnerRequest(Long id);
+    boolean updateUserPasswordOrEmail(String userName, String password, String email);
+    RequestFormat getRequestInfo(Long id);
 }

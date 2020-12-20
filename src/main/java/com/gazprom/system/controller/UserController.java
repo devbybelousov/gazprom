@@ -44,4 +44,14 @@ public class UserController {
     public ResponseEntity<?> getAllDepartmentByUnit(@RequestParam (name = "unitId") Long id){
         return ResponseEntity.ok(userService.getAllDepartmentByUnit(id));
     }
+
+    @GetMapping("/update/password")
+    public ResponseEntity<?> updatePasswordUser(@RequestParam String userName, @RequestParam String password){
+        return ResponseEntity.ok(new ApiResponse(userService.updateUserPasswordOrEmail(userName, password, ""),  "Password changed."));
+    }
+
+    @GetMapping("/update/email")
+    public ResponseEntity<?> updateEmailUser(@RequestParam String userName, @RequestParam String email){
+        return ResponseEntity.ok(new ApiResponse(userService.updateUserPasswordOrEmail(userName, "", email),  "Email changed."));
+    }
 }

@@ -193,6 +193,7 @@ public class UserServiceImpl implements UserService {
         historyRepository.save(history);
         List<History> historyList = request.getHistory();
         historyList.add(history);
+        request.setExpiryDate(new Timestamp(System.currentTimeMillis()));
         request.setStatus(StatusName.STATUS_ENABLE.toString());
         requestRepository.save(request);
         return true;
@@ -311,6 +312,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<?> getAllOwnerRequest(Long id) {
         return getAllRequestAdminOrOwner(systemRepository.findAllByOwnerId(id), id);
+    }
+
+    @Override
+    public boolean updateUserPasswordOrEmail(String userName, String password, String email) {
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException("User not found."));
+        if (!password.equals(""))
+            user.setPassword(passwordEncoder.encode(password));
+        if (!email.equals(""))
+            user.setEmail(email);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public RequestFormat getRequestInfo(Long id) {
+        Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
+        Date expiryDate = null;
+        if (request.getExpiryDate() == null) expiryDate = new Date(1, 1, 1);
+        else expiryDate =  new Date(request.getExpiryDate().getDate(), request.getExpiryDate().getMonth(), request.getExpiryDate().getYear());
+        return new RequestFormat(request.getId(), request.getStatus(), getFormatUsers(request.getUsers()), request.getPrivileges(),
+                new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),
+                expiryDate, request.getInformationSystem().getId(), request.getInformationSystem().getTitle());
     }
 
     private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){

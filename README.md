@@ -137,3 +137,18 @@ fillingDate[day, month, year], expiryDate[day, month, year], privileges[id, titl
 * входные данные: userId
 * выходные данные: ok
 * пример: **api/request/all/owner?&userId=1**
+
+**Обновить пароль пользователя(GET)**: _api/user/update/password_
+* входные данные: userName, password
+* выходные данные: ok
+* пример: **api/user/update/password?&userName=Логин&password=qwerty**
+
+**Обновить электронную почту пользователя(GET)**: _api/user/update/email_
+* входные данные: userName, email
+* выходные данные: ok
+* пример: **api/user/update/email?&userName=Логин&email=info@example.com**
+
+**Получить информацию о заявке(GET)**: _api/request/info_
+* входные данные: requestId
+* выходные данные: idRequest, status, users(список), privileges, filingDate, expiryDate, idSystem, system (Название)
+* пример: **api/request/info?&requestId=1&**

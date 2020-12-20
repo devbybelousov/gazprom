@@ -81,4 +81,9 @@ public class RequestController {
         return ResponseEntity.ok(new ApiResponse(true,
                 "The application was rejection successfully"));
     }
+
+    @GetMapping("/info")
+    ResponseEntity<?> getRequestInfo(@RequestParam("requestId") Long id){
+        return ResponseEntity.ok(userService.getRequestInfo(id));
+    }
 }
