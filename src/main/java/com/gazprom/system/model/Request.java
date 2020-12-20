@@ -37,7 +37,7 @@ public class Request {
     private InformationSystem informationSystem;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "request_id")
     private List<History> history;
 

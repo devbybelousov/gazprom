@@ -24,7 +24,7 @@ public class Department {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "unit_id")
     public Unit unit;

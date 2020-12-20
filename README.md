@@ -3,7 +3,7 @@
 -----------------------------------
 **Авторизация пользователя (POST)**: _api/auth/signin_
 * входные данные: userName, password; 
-* выходные данные: accessToken, tokenType, userId
+* выходные данные: accessToken, tokenType, userId, role
 
 **Добавление нового пользователя (POST)**: _api/admin/create/user_
 * входные данные: userName, password, name, lastName, middleName, departmentId, role (номер от 0 до 4); 

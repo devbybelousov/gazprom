@@ -124,7 +124,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<?> getAllUser() {
-        List<User> users = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        for (User user : userRepository.findAll()){
+            if (user.getRoles().iterator().next().getRole().equals(RoleName.ROLE_USER.toString()))
+                users.add(user);
+        }
         return getFormatUsers(users);
     }
 
@@ -349,6 +353,15 @@ public class UserServiceImpl implements UserService {
         return new RequestFormat(request.getId(), request.getStatus(), getFormatUsers(request.getUsers()), request.getPrivileges(),
                 new Date(request.getFilingDate().getDate(), request.getFilingDate().getMonth(), request.getFilingDate().getYear()),
                 expiryDate, request.getInformationSystem().getId(), request.getInformationSystem().getTitle());
+    }
+
+    @Override
+    public void deleteAll() {
+        systemRepository.deleteAll();
+        requestRepository.deleteAll();
+        userRepository.deleteAll();
+        UserRequest userRequest = new UserRequest("admin", "admin", "Иван", "Иванов", "Иванович", "admin@exmple.com", 168L, 1L);
+        createUser(userRequest);
     }
 
     private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){

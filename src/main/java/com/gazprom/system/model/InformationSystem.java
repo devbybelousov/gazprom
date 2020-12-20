@@ -24,15 +24,15 @@ public class InformationSystem {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "primary_admin_id")
     private User primaryAdmin;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "backup_admin_id")
     private User backupAdmin;
 
