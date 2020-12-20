@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -33,6 +35,7 @@ public class Request {
     private Timestamp expiryDate;
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "system_id")
     private InformationSystem informationSystem;
 

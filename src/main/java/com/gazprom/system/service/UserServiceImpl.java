@@ -357,7 +357,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteAll() {
-        systemRepository.deleteAll();
+        //systemRepository.deleteAll();
         requestRepository.deleteAll();
         userRepository.deleteAll();
         UserRequest userRequest = new UserRequest("admin", "admin", "Иван", "Иванов", "Иванович", "admin@exmple.com", 168L, 1L);
