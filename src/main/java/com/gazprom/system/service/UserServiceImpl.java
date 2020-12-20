@@ -355,15 +355,6 @@ public class UserServiceImpl implements UserService {
                 expiryDate, request.getInformationSystem().getId(), request.getInformationSystem().getTitle());
     }
 
-    @Override
-    public void deleteAll() {
-        //systemRepository.deleteAll();
-        requestRepository.deleteAll();
-        userRepository.deleteAll();
-        UserRequest userRequest = new UserRequest("admin", "admin", "Иван", "Иванов", "Иванович", "admin@exmple.com", 168L, 1L);
-        createUser(userRequest);
-    }
-
     private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){
         List<Request> requestList = new ArrayList<>();
         for (InformationSystem system : systems){
@@ -449,7 +440,7 @@ public class UserServiceImpl implements UserService {
         templateModel.put("roles", roles);
         templateModel.put("dateShipped", formatForDateNow.format(dateNow));
         templateModel.put("admin", false);
-        templateModel.put("href", false);
+        templateModel.put("href", "");
         return templateModel;
     }
 
@@ -458,7 +449,7 @@ public class UserServiceImpl implements UserService {
         String userName = user.getLastName() + " " + user.getName() + " " + user.getMiddleName();
         templateModel.replace("user", userName);
         templateModel.replace("admin", true);
-        templateModel.replace("href", "/");
+        templateModel.replace("href", "http://u97708.test-handyhost.ru/admin=" + user.getId() +"/info/" + request.getId());
         sendHtmlMessage(user.getEmail(), "Подтверждение заявки", templateModel, "html/creating");
     }
 

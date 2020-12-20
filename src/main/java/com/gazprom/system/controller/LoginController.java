@@ -57,8 +57,6 @@ public class LoginController {
         String username = loginRequest.getUserName();
         String password = loginRequest.getPassword();
 
-        userService.deleteAll();
-
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
