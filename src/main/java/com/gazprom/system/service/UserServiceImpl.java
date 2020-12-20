@@ -351,17 +351,6 @@ public class UserServiceImpl implements UserService {
                 expiryDate, request.getInformationSystem().getId(), request.getInformationSystem().getTitle());
     }
 
-    @Override
-    public boolean addRoleUser() {
-        Role userRole = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow();
-        for (User user : userRepository.findAll()){
-            if (user.getDepartment() != null)
-                user.setRoles(Collections.singleton(userRole));
-            userRepository.save(user);
-        }
-        return true;
-    }
-
     private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){
         List<Request> requestList = new ArrayList<>();
         for (InformationSystem system : systems){

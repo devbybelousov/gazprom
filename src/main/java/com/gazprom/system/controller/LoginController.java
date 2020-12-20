@@ -1,5 +1,7 @@
 package com.gazprom.system.controller;
 
+import com.gazprom.system.enumeration.RoleName;
+import com.gazprom.system.exceprion.AppException;
 import com.gazprom.system.model.Role;
 import com.gazprom.system.model.User;
 import com.gazprom.system.payload.*;
@@ -7,6 +9,7 @@ import com.gazprom.system.repository.RoleRepository;
 import com.gazprom.system.repository.UserRepository;
 import com.gazprom.system.security.JwtTokenProvider;
 import com.gazprom.system.service.UserServiceImpl;
+import org.hibernate.mapping.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -69,10 +74,15 @@ public class LoginController {
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
 
-        logger.error(user.getRoles().toString());
+        if (user.getRoles().isEmpty()){
+            Role role = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow(() -> new AppException("Role not found."));
+            user.setRoles(Collections.singleton(role));
+            user = userRepository.save(user);
+            logger.error("User Role added!");
+        }
 
         Role role = user.getRoles().iterator().next();
-        logger.error(role.getRole());
+        logger.error("role = {}", role.getRole());
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), role.getRole()));
