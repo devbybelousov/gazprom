@@ -82,14 +82,10 @@ public class LoginController {
             roles.add(role);
             user.setRoles(roles);
             user = userRepository.save(user);
-            logger.error("User Role added!");
         }
 
-        Role role = user.getRoles().iterator().next();
-        logger.error("role = {}", role.getRole());
-
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), role.getRole()));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), user.getRoles().iterator().next().getRole()));
     }
 
 
