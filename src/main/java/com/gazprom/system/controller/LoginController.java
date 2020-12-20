@@ -57,10 +57,6 @@ public class LoginController {
         String username = loginRequest.getUserName();
         String password = loginRequest.getPassword();
 
-        for (long i = 137; i < 168; i++){
-            userService.deleteUnit(i);
-        }
-
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
