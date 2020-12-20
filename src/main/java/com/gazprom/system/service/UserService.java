@@ -34,4 +34,5 @@ public interface UserService {
     List<?> getAllOwnerRequest(Long id);
     boolean updateUserPasswordOrEmail(String userName, String password, String email);
     RequestFormat getRequestInfo(Long id);
+    boolean addRoleUser();
 }

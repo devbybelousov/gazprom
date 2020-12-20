@@ -151,7 +151,8 @@ public class UserServiceImpl implements UserService {
         request = requestRepository.save(request);
         history.setRequest(request);
         historyRepository.save(history);
-        sendEmailAddRequest(request);
+        sendEmailUsers(request, "html/creating", "Заявка на рассмотрении", "", false);
+        sendEmailAdminOrOwner(request, system.getOwner());
         return true;
     }
 
@@ -194,6 +195,7 @@ public class UserServiceImpl implements UserService {
         historyList.add(historyOwner);
         historyList.add(historyAdmin);
         requestRepository.save(request);
+        sendEmailAdminOrOwner(request, request.getInformationSystem().getPrimaryAdmin());
         return true;
     }
 
@@ -208,6 +210,7 @@ public class UserServiceImpl implements UserService {
         request.setExpiryDate(new Timestamp(System.currentTimeMillis()));
         request.setStatus(StatusName.STATUS_ENABLE.toString());
         requestRepository.save(request);
+        sendEmailUsers(request, "html/confirmation", "Заявка подтверждена", "", true);
         return true;
     }
 
@@ -216,12 +219,7 @@ public class UserServiceImpl implements UserService {
         Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         if (!userId.equals(request.getInformationSystem().getOwner().getId())) return false;
         History history = new History(reason, request.getInformationSystem().getOwner(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
-        historyRepository.save(history);
-        List<History> historyList = request.getHistory();
-        historyList.add(history);
-        request.setStatus(StatusName.STATUS_REFUSED.toString());
-        requestRepository.save(request);
-        return true;
+        return refused(reason, request, history);
     }
 
     @Override
@@ -229,11 +227,16 @@ public class UserServiceImpl implements UserService {
         Request request = requestRepository.findAllById(id).orElseThrow(() -> new AppException("Request not found."));
         if (!userId.equals(request.getInformationSystem().getPrimaryAdmin().getId())) return false;
         History history = new History(reason, request.getInformationSystem().getPrimaryAdmin(), StatusName.STATUS_REFUSED.toString(), new Timestamp(System.currentTimeMillis()));
+        return refused(reason, request, history);
+    }
+
+    private boolean refused(String reason, Request request, History history) {
         historyRepository.save(history);
         List<History> historyList = request.getHistory();
         historyList.add(history);
         request.setStatus(StatusName.STATUS_REFUSED.toString());
         requestRepository.save(request);
+        sendEmailUsers(request, "html/refused", "Заявка отклонена", reason, false);
         return true;
     }
 
@@ -348,6 +351,17 @@ public class UserServiceImpl implements UserService {
                 expiryDate, request.getInformationSystem().getId(), request.getInformationSystem().getTitle());
     }
 
+    @Override
+    public boolean addRoleUser() {
+        Role userRole = roleRepository.findByRole(RoleName.ROLE_USER.toString()).orElseThrow();
+        for (User user : userRepository.findAll()){
+            if (user.getDepartment() != null)
+                user.setRoles(Collections.singleton(userRole));
+            userRepository.save(user);
+        }
+        return true;
+    }
+
     private List<RequestFormat> getAllRequestAdminOrOwner(List<InformationSystem> systems, Long id){
         List<Request> requestList = new ArrayList<>();
         for (InformationSystem system : systems){
@@ -416,8 +430,8 @@ public class UserServiceImpl implements UserService {
         return userProfiles;
     }
 
-    private void sendEmailAddRequest(Request request) {
-        java.util.Date dateNow = new java.util.Date();
+    private Map<String, Object> getTemplate(Request request){
+        java.util.Date dateNow = new java.util.Date(request.getFilingDate().getTime());
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         StringBuilder roles = new StringBuilder();
 
@@ -432,19 +446,31 @@ public class UserServiceImpl implements UserService {
         templateModel.put("system", request.getInformationSystem().getTitle());
         templateModel.put("roles", roles);
         templateModel.put("dateShipped", formatForDateNow.format(dateNow));
-        templateModel.put("owner", false);
+        templateModel.put("admin", false);
+        templateModel.put("href", false);
+        return templateModel;
+    }
 
+    private void sendEmailAdminOrOwner(Request request, User user){
+        Map<String, Object> templateModel = getTemplate(request);
+        String userName = user.getLastName() + " " + user.getName() + " " + user.getMiddleName();
+        templateModel.replace("user", userName);
+        templateModel.replace("admin", true);
+        templateModel.replace("href", "/");
+        sendHtmlMessage(user.getEmail(), "Подтверждение заявки", templateModel, "html/creating");
+    }
+
+    private void sendEmailUsers(Request request, String pathToHtml, String subject, String reason, boolean isConfirm) {
+        Map<String, Object> templateModel = getTemplate(request);
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         for (User user : request.getUsers()) {
             String userName = user.getLastName() + " " + user.getName() + " " + user.getMiddleName();
             templateModel.replace("user", userName);
-            sendHtmlMessage(user.getEmail(), "Заявка на рассмотрении", templateModel, "html/creatingRequest");
+            if (!reason.equals("")) templateModel.put("reason", reason);
+
+            if (isConfirm) templateModel.put("dateExpiry", formatForDateNow.format(new java.util.Date(request.getExpiryDate().getTime())));
+            sendHtmlMessage(user.getEmail(), subject, templateModel, pathToHtml);
         }
-        String userName = request.getInformationSystem().getOwner().getLastName() + " " +
-                request.getInformationSystem().getOwner().getName() + " " +
-                request.getInformationSystem().getOwner().getMiddleName();
-        templateModel.replace("user", userName);
-        templateModel.replace("owner", true);
-        sendHtmlMessage(request.getInformationSystem().getOwner().getEmail(), "Заявка на рассмотрении", templateModel, "html/creatingRequest");
     }
 
     private void sendHtmlMessage(String to, String subject, Map<String, Object> template, String pathToHtml) {
