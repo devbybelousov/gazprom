@@ -247,11 +247,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addSystem(SystemRequest systemRequest) {
         User owner = userRepository.findById(systemRequest.getOwnerId()).orElseThrow(() -> new AppException("User not found."));
+        logger.error(owner.getUserName());
         User primaryAdmin = userRepository.findById(systemRequest.getPrimaryAdminId()).orElseThrow(() -> new AppException("User not found."));
+        logger.error(primaryAdmin.getUserName());
         User backupAdmin = userRepository.findById(systemRequest.getBackupAdminId()).orElseThrow(() -> new AppException("User not found."));
+        logger.error(backupAdmin.getUserName());
+        logger.error(systemRequest.getPrivilegesId().toString());
         List<Privilege> privileges = new ArrayList<>();
         for (Long id : systemRequest.getPrivilegesId()){
             Privilege privilege = privilegeRepository.findById(id).orElseThrow(() -> new AppException("Privilege not found."));
+            logger.error(privilege.getTitle());
             privileges.add(privilege);
         }
         InformationSystem system = new InformationSystem(systemRequest.getTitle(), owner, primaryAdmin, backupAdmin, privileges);
