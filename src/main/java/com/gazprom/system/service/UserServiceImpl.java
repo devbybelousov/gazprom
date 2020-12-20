@@ -1,5 +1,6 @@
 package com.gazprom.system.service;
 
+import com.gazprom.system.enumeration.RoleName;
 import com.gazprom.system.enumeration.StatusName;
 import com.gazprom.system.exceprion.AppException;
 import com.gazprom.system.mail.EmailService;
@@ -59,8 +60,19 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByUserName(userRequest.getUserName())) {
             return false;
         }
+        String titleRole = "";
+        int index = 0;
+        for (RoleName roleName : RoleName.values()){
+            if (index == userRequest.getRole()) titleRole = roleName.toString();
+            index++;
+        }
 
-        Role userRole = roleRepository.findByRole("ROLE_USER")
+        if (!roleRepository.existsByRole(titleRole)){
+            Role role = new Role(titleRole);
+            roleRepository.save(role);
+        }
+
+        Role userRole = roleRepository.findByRole(titleRole)
                 .orElseThrow(() -> new AppException("User Role not found."));
         logger.debug(userRole.getRole());
         Department department = departmentRepository.findById(userRequest.getDepartmentId())

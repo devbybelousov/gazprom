@@ -69,7 +69,7 @@ public class LoginController {
                 );
 
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId()));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), user.getRoles().iterator().next().getRole()));
     }
 
 

@@ -6,8 +6,11 @@
 * выходные данные: accessToken, tokenType, userId
 
 **Добавление нового пользователя (POST)**: _api/admin/create/user_
-* входные данные: userName, password, name, lastName, middleName, departmentId; 
+* входные данные: userName, password, name, lastName, middleName, departmentId, role (номер от 0 до 4); 
 * выходные данные: ok
+* замечание: номер роли: 0 - пользователь (ROLE_USER), 
+1 - супер админ (ROLE_SUPER_ADMIN), 2 - владелец (ROLE_OWNER), 
+3 - админ (ROLE_PRIMARY_ADMIN), 4 - резервный админ (ROLE_BACKUP_ADMIN)
 
 **Получение информации пользователя (GET)**: _api/user/info_
 * входные данные: userId;
