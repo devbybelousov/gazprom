@@ -1,5 +1,6 @@
 package com.gazprom.system.controller;
 
+import com.gazprom.system.model.Role;
 import com.gazprom.system.model.User;
 import com.gazprom.system.payload.*;
 import com.gazprom.system.repository.RoleRepository;
@@ -49,8 +50,6 @@ public class LoginController {
         String username = loginRequest.getUserName();
         String password = loginRequest.getPassword();
 
-        userService.addRoleUser();
-
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -70,8 +69,11 @@ public class LoginController {
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
 
+        Role role = user.getRoles().iterator().next();
+        logger.error(role.getRole());
+
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), user.getRoles().iterator().next().getRole()));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), role.getRole()));
     }
 
 
