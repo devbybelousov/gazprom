@@ -32,7 +32,7 @@ public class Request {
     @Column(name = "expiry_date")
     private Timestamp expiryDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "system_id")
     private InformationSystem informationSystem;
 
