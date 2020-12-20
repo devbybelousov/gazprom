@@ -69,6 +69,8 @@ public class LoginController {
                         new UsernameNotFoundException("User not found with username: " + username)
                 );
 
+        logger.error(user.getRoles().toString());
+
         Role role = user.getRoles().iterator().next();
         logger.error(role.getRole());
 
