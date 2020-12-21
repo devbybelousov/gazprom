@@ -14,11 +14,12 @@
         </div>
     </div>
     <div style="margin: 0; padding: 0 20px; background-color: #E2F1F8">
-        <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Ваша заявка отправлена на рассмотрение</p>
+        <p th:if="${admin == false}" style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Ваша заявка отправлена на рассмотрение</p>
+        <p th:if="${admin == true}" style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Отправлена заявка о получении доступа</p>
         <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Информационная система: <span style="color: #333333" th:text="${system}"></span></p>
         <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;" th:each="role : ${roles}">Роли: <span style="color: #333333" th:text="${role}"></span></p>
         <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Дата подачи: <span style="color: #333333" th:text="${dateShipped}"></span></p>
-        <p th:if="${admin == true}" style="color: #000;font-size: 20px;margin: 0; padding-bottom: 10px;font-family: 'Roboto', sans-serif;">Ссылка для подтверждения или отклонения:
+        <p th:if="${admin == true}" style="color: #000;font-size: 20px;margin: 0; padding-bottom: 10px;font-family: 'Roboto', sans-serif;">Для подтверждения или отклонения:
             <a th:href="${href}" href="#" style="color: #333333;font-size: 20px;margin: 0;font-family: 'Roboto', sans-serif;" >перейти по ссылке</a>
         </p>
     </div>

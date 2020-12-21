@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
         List<History> historyList = request.getHistory();
         historyList.add(history);
         request.setStatus(StatusName.STATUS_REFUSED.toString());
-        requestRepository.save(request);
+        request = requestRepository.save(request);
         sendEmailUsers(request, "html/refused", "Заявка отклонена", reason, false);
         return true;
     }
@@ -461,7 +461,6 @@ public class UserServiceImpl implements UserService {
             String userName = user.getLastName() + " " + user.getName() + " " + user.getMiddleName();
             templateModel.replace("user", userName);
             if (!reason.equals("")) templateModel.put("reason", reason);
-
             if (isConfirm) templateModel.put("dateExpiry", formatForDateNow.format(new java.util.Date(request.getExpiryDate().getTime())));
             sendHtmlMessage(user.getEmail(), subject, templateModel, pathToHtml);
         }
