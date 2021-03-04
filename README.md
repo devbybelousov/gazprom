@@ -5,6 +5,20 @@ _REST-сервис для подачи заявок по получению до
 ```
 http://localhost:8080/api/user/info?id=2
 ```
+Сборка и запуск
+----------------------------------
+```
+mvn clean istall
+```
+
+База данных
+------------------------------------
+Изменить поля в application.properties
+```
+spring.datasource.url = jdbc:mysql://[host]:[port]/gazprom_data?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useLegacyDatetimeCode=false&characterEncoding=utf8
+spring.datasource.username = [username]
+spring.datasource.password = [password]
+```
 Запросы:
 -----------------------------------
 ### api/auth/login (POST)
