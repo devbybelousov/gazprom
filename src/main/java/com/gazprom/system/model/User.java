@@ -1,5 +1,6 @@
 package com.gazprom.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,63 +18,66 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "user_id")
+  private Long id;
 
-    @Column(name = "user_name")
-    private String userName;
+  @Column(name = "user_name")
+  private String userName;
 
-    @Column(name = "password")
-    private String password;
+  @JsonIgnore
+  @Column(name = "password")
+  private String password;
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    @Column(name = "last_name")
-    private String lastName;
+  @Column(name = "last_name")
+  private String lastName;
 
-    @Column(name = "middle_name")
-    private String middleName;
+  @Column(name = "middle_name")
+  private String middleName;
 
-    @Column(name = "email")
-    private String email;
+  @Column(name = "email")
+  private String email;
 
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+  @ManyToMany(cascade = {CascadeType.MERGE})
+  @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "request_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "request_id"))
-    private List<Request> requests;
+  @JsonIgnore
+  @ManyToMany(cascade = CascadeType.MERGE)
+  @JoinTable(name = "request_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "request_id"))
+  private List<Request> requests;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "department_id")
-    private Department department;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "department_id")
+  private Department department;
 
-    public User( String userName, String password, String name, String lastName, String middleName, Set<Role> roles) {
-        this.userName = userName;
-        this.password = password;
-        this.name = name;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.roles = roles;
-    }
+  public User(String userName, String password, String name, String lastName, String middleName,
+      Set<Role> roles) {
+    this.userName = userName;
+    this.password = password;
+    this.name = name;
+    this.lastName = lastName;
+    this.middleName = middleName;
+    this.roles = roles;
+  }
 
-    public User(String userName, String password, String name, String lastName,
-                String middleName, Set<Role> roles, Department department) {
-        this.userName = userName;
-        this.password = password;
-        this.name = name;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.roles = roles;
-        this.department = department;
-    }
+  public User(String userName, String password, String name, String lastName,
+      String middleName, Set<Role> roles, Department department) {
+    this.userName = userName;
+    this.password = password;
+    this.name = name;
+    this.lastName = lastName;
+    this.middleName = middleName;
+    this.roles = roles;
+    this.department = department;
+  }
 
-    public User(String userName, String password){
-        this.userName = userName;
-        this.password = password;
-    }
+  public User(String userName, String password) {
+    this.userName = userName;
+    this.password = password;
+  }
 }

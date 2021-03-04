@@ -1,28 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Shrikhand&display=swap" rel="stylesheet">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Shrikhand&display=swap"
+        rel="stylesheet">
 </head>
 <body>
-<div style="max-width: 90%; margin: 0 auto;">
-    <div style="display: flex; margin-bottom: 10px">
-<!--        <img src="images/mail-logo.svg" data-th-src="|cid:logo|" style="width: 30px;margin: 0 10px 0 0" alt="placeholder+image">-->
-        <div style="color: #262626;font-size: 25px; padding:15px 0 0 0;font-family: 'Roboto', sans-serif;">
-            Здравствуйте, <span th:text="${user}"></span>
-        </div>
+<div class="main-block">
+  <div class="main-block_header">
+    <img src="../../../resources/mail/html/images/mail-logo.svg" th:src="@{images/mail-logo.svg}" alt="placeholder+image">
+    <div class="title">
+      Здравствуйте, <span th:text="${user}"></span>
     </div>
-    <div style="margin: 0; padding: 0 20px; background-color: #E2F1F8">
-        <p th:if="${admin == false}" style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Ваша заявка отправлена на рассмотрение</p>
-        <p th:if="${admin == true}" style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Отправлена заявка о получении доступа</p>
-        <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Информационная система: <span style="color: #333333" th:text="${system}"></span></p>
-        <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;" th:each="role : ${roles}">Роли: <span style="color: #333333" th:text="${role}"></span></p>
-        <p style="color: #000;font-size: 20px;margin: 0; padding: 10px 0;font-family: 'Roboto', sans-serif;">Дата подачи: <span style="color: #333333" th:text="${dateShipped}"></span></p>
-        <p th:if="${admin == true}" style="color: #000;font-size: 20px;margin: 0; padding-bottom: 10px;font-family: 'Roboto', sans-serif;">Для подтверждения или отклонения:
-            <a th:href="${href}" href="#" style="color: #333333;font-size: 20px;margin: 0;font-family: 'Roboto', sans-serif;" >перейти по ссылке</a>
-        </p>
-    </div>
+  </div>
+  <div class="main-block_info">
+    <p th:if="${admin == false}">Ваша заявка отправлена на рассмотрение</p>
+    <p th:if="${admin == true}">Отправлена заявка о получении доступа</p>
+    <p>Информационная система: <span th:text="${system}"></span></p>
+    <p th:each="role : ${roles}">Роли: <span th:text="${role}"></span></p>
+    <p>Дата подачи: <span th:text="${dateShipped}"></span></p>
+    <p th:if="${admin == true}">Для подтверждения или отклонения:
+      <a th:href="${href}" href="#">перейти по ссылке</a>
+    </p>
+  </div>
 </div>
+<style>
+  * {
+    font-family: 'Roboto', sans-serif !important;
+  }
+
+  .main-block {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .main-block_header {
+    display: flex;
+    margin-bottom: 10px
+  }
+
+  .main-block_header img {
+    width: 30px;
+    margin: 0 10px 0 0;
+  }
+
+  .main-block_header .title {
+    color: #262626;
+    font-size: 25px;
+    padding: 15px 0 0 0;
+  }
+
+  .main-block_info {
+    margin: 0;
+    padding: 0 20px;
+    background-color: #E2F1F8
+  }
+
+  .main-block_info > p {
+    color: #000;
+    font-size: 20px;
+    margin: 0;
+    padding: 10px 0;
+  }
+
+  .main-block_info > p > span {
+    color: #333333;
+  }
+
+  .main-block_info > p > a {
+    color: #333333;
+    font-size: 20px;
+    margin: 0;
+  }
+</style>
 </body>
 </html>

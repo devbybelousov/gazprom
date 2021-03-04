@@ -13,5 +13,5 @@ import java.util.List;
 public class ApplicationRequest {
     private List<Long> usersId;
     private List<Long> privilegesId;
-    private Long idSystem;
+    private Long systemId;
 }

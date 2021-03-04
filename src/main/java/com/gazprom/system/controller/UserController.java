@@ -1,57 +1,65 @@
 package com.gazprom.system.controller;
 
-import com.gazprom.system.model.Department;
-import com.gazprom.system.payload.ApiResponse;
-import com.gazprom.system.payload.ApplicationRequest;
-import com.gazprom.system.service.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.gazprom.system.payload.UserRequest;
+import com.gazprom.system.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/user")
+@AllArgsConstructor
 public class UserController {
-    @Autowired
-    private UserServiceImpl userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllUser(){
-        return ResponseEntity.ok(userService.getAllUser());
-    }
+  private final UserService userService;
 
-    @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo(@RequestParam(name = "userId") Long id) {
-        return ResponseEntity.ok(userService.getUserInfo(id));
-    }
+  @PostMapping()
+  public ResponseEntity<?> createUser(@RequestBody UserRequest signUpRequest) {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.createUser(signUpRequest));
+  }
 
-    @GetMapping("/system/info")
-    public ResponseEntity<?> getSystemInfo(@RequestParam(name = "systemId") Long id){
-        return ResponseEntity.ok(userService.getSystemById(id));
-    }
+  @GetMapping()
+  public ResponseEntity<?> getAllUser() {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.getAllUser());
+  }
 
-    @GetMapping("/system/all")
-    public ResponseEntity<?> getAllSystem(){
-        return ResponseEntity.ok(userService.getAllSystem());
-    }
+  @GetMapping("/info")
+  public ResponseEntity<?> getUserInfo(@RequestParam(name = "id") Long id) {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.getUserInfo(id));
+  }
 
-    @GetMapping("/unit/all")
-    public ResponseEntity<?> getAllUnit(){
-        return ResponseEntity.ok(userService.getAllUnit());
-    }
+  @GetMapping("/exists")
+  public ResponseEntity<?> isUserNameExists(@RequestParam("userName") String userName) {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.isExistUser(userName));
+  }
 
-    @GetMapping("/department/all")
-    public ResponseEntity<?> getAllDepartmentByUnit(@RequestParam (name = "unitId") Long id){
-        return ResponseEntity.ok(userService.getAllDepartmentByUnit(id));
-    }
+  @DeleteMapping()
+  public ResponseEntity<?> deleteUser(@RequestParam(name = "id") Long userId) {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.deleteUser(userId));
+  }
 
-    @GetMapping("/update/password")
-    public ResponseEntity<?> updatePasswordUser(@RequestParam String userName, @RequestParam String password){
-        return ResponseEntity.ok(new ApiResponse(userService.updateUserPasswordOrEmail(userName, password, ""),  "Password changed."));
-    }
+  @PutMapping()
+  public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest) {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.updateUser(userRequest));
+  }
 
-    @GetMapping("/update/email")
-    public ResponseEntity<?> updateEmailUser(@RequestParam String userName, @RequestParam String email){
-        return ResponseEntity.ok(new ApiResponse(userService.updateUserPasswordOrEmail(userName, "", email),  "Email changed."));
-    }
+  @GetMapping("/roles")
+  public ResponseEntity<?> getAllRoles() {
+    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(userService.getAllRoles());
+  }
 }

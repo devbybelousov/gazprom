@@ -25,62 +25,75 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:mail/emailconfig.properties")
 public class SpringMailConfig implements ApplicationContextAware, EnvironmentAware {
-    public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
-    private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
+  public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
-    private static final String HOST = "mail.server.host";
-    private static final String PORT = "mail.server.port";
-    private static final String PROTOCOL = "mail.server.protocol";
-    private static final String USERNAME = "mail.server.username";
-    private static final String PASSWORD = "mail.server.password";
+  private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
 
-    private ApplicationContext applicationContext;
-    private Environment environment;
+  private static final String HOST = "mail.server.host";
+  private static final String PORT = "mail.server.port";
+  private static final String PROTOCOL = "mail.server.protocol";
+  private static final String USERNAME = "mail.server.username";
+  private static final String PASSWORD = "mail.server.password";
 
-    @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+  private ApplicationContext applicationContext;
+  private Environment environment;
 
-    @Override
-    public void setEnvironment(final Environment environment) {
-        this.environment = environment;
-    }
+  @Override
+  public void setApplicationContext(final ApplicationContext applicationContext)
+      throws BeansException {
+    this.applicationContext = applicationContext;
+  }
 
-    @Bean
-    public JavaMailSender mailSender() throws IOException {
+  @Override
+  public void setEnvironment(final Environment environment) {
+    this.environment = environment;
+  }
 
-        final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+  @Bean
+  public JavaMailSender mailSender() throws IOException {
 
-        mailSender.setHost(this.environment.getProperty(HOST));
-        mailSender.setPort(Integer.parseInt(Objects.requireNonNull(this.environment.getProperty(PORT))));
-        mailSender.setProtocol(this.environment.getProperty(PROTOCOL));
-        mailSender.setUsername(this.environment.getProperty(USERNAME));
-        mailSender.setPassword(this.environment.getProperty(PASSWORD));
-        final Properties javaMailProperties = new Properties();
-        javaMailProperties.load(this.applicationContext.getResource(JAVA_MAIL_FILE).getInputStream());
-        mailSender.setJavaMailProperties(javaMailProperties);
+    final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        return mailSender;
+    mailSender.setHost(this.environment.getProperty(HOST));
+    mailSender
+        .setPort(Integer.parseInt(Objects.requireNonNull(this.environment.getProperty(PORT))));
+    //mailSender.setProtocol(this.environment.getProperty(PROTOCOL));
+    mailSender.setUsername(this.environment.getProperty(USERNAME));
+    mailSender.setPassword(this.environment.getProperty(PASSWORD));
+    final Properties javaMailProperties = new Properties();
+    javaMailProperties.load(this.applicationContext.getResource(JAVA_MAIL_FILE).getInputStream());
 
-    }
-    @Bean
-    public TemplateEngine emailTemplateEngine() {
-        final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.addTemplateResolver(htmlTemplateResolver());
-        return templateEngine;
-    }
+    /*mailSender.setUsername("2bf476315f5e79");
+    mailSender.setPassword("68048bda733595");*/
 
-    private ITemplateResolver htmlTemplateResolver() {
-        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(1);
-        templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
-        templateResolver.setPrefix("/mail/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
+    /*Properties props = mailSender.getJavaMailProperties();
+    props.put("mail.transport.protocol", "smtp");
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");*/
+    javaMailProperties.put("mail.debug", "true");
+    //mailSender.setJavaMailProperties(javaMailProperties);
+
+    return mailSender;
+
+  }
+
+  @Bean
+  public TemplateEngine emailTemplateEngine() {
+    final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.addTemplateResolver(htmlTemplateResolver());
+    return templateEngine;
+  }
+
+  private ITemplateResolver htmlTemplateResolver() {
+    final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+    templateResolver.setOrder(1);
+    templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+    templateResolver.setPrefix("/mail/");
+    templateResolver.setSuffix(".html");
+    templateResolver.setTemplateMode(TemplateMode.HTML);
+    templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
+    templateResolver.setCacheable(false);
+    return templateResolver;
+  }
 }

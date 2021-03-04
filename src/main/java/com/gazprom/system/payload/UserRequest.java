@@ -15,5 +15,5 @@ public class UserRequest {
     private String middleName;
     private String email;
     private Long departmentId;
-    private Long role;
+    private int role;
 }

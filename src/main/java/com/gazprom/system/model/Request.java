@@ -1,5 +1,7 @@
 package com.gazprom.system.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +30,11 @@ public class Request {
     @Column(name = "status")
     private String status;
 
+    @JsonFormat(pattern = "dd.MM.yyy", shape = Shape.STRING)
     @Column(name = "filing_date")
     private Timestamp filingDate;
 
+    @JsonFormat(pattern = "dd.MM.yyy", shape = Shape.STRING)
     @Column(name = "expiry_date")
     private Timestamp expiryDate;
 
